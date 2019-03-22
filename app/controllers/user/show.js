@@ -1,9 +1,10 @@
 // Core
-const mock = require('../../models/get-user.js')
+const Schema = require('../../models/users')
 
 module.exports = class Show {
-  constructor (app) {
+  constructor (app, connect) {
     this.app = app
+    this.User = connect.model('User', Schema)
 
     this.run()
   }
@@ -21,7 +22,20 @@ module.exports = class Show {
           })
         }
 
-        res.status(200).json(mock[req.params.id] || {})
+        this.User.findById(req.params.id, (err, user) => {
+          if(!user) {
+            res.status(500).json({
+              code: 500,
+              message: 'Internal Server Error'
+            })
+
+            return
+          }
+
+          res.status(200).json(user)
+
+          return
+        })
       } catch (e) {
         console.error(`[ERROR] user/show/:id -> ${e}`)
         res.status(400).json({

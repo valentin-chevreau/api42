@@ -20,7 +20,7 @@ module.exports = class Create {
    * Data base connect
    */
   getModel (res, payload) {
-    mongoose.connect('mongodb://localhost:27017/socialobjects')
+    mongoose.connect('mongodb://localhost:27017/react')
 
     this.db = mongoose.connection
     this.db.on('error', () => {
